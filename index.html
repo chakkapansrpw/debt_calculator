@@ -35,15 +35,81 @@
             <h1 class="text-4xl font-extrabold text-blue-800 mb-2">คำนวณหนี้</h1>
         </header>
 
-        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             <!-- Input Panel -->
-            <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-custom h-full">
+            <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-custom">
                 <h2 class="text-2xl font-semibold mb-6 text-blue-700">ข้อมูลการกู้ยืม</h2>
                 <form id="debtForm" class="space-y-4">
-                    <!-- เงินต้น -->
-                    <div>
-                        <label for="principal" class="block text-sm font-medium text-gray-700">เงินต้น (บาท)</label>
-                        <input type="number" id="principal" value="10000" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500 transition duration-150" required min="1">
+                    <!-- แหล่งที่มาของเงินต้น -->
+                    <div class="space-y-3">
+                        <label class="block text-sm font-bold text-gray-700">แหล่งที่มาของเงินต้น</label>
+                        <div class="flex items-center space-x-6">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="principalSource" value="direct" checked class="form-radio h-5 w-5 text-blue-600">
+                                <span class="ml-2 text-gray-700">ระบุเงินต้นเอง</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="principalSource" value="gold" class="form-radio h-5 w-5 text-amber-600">
+                                <span class="ml-2 text-gray-700">คำนวณจากราคาทอง</span>
+                            </label>
+                        </div>
+
+                        <!-- Gold panel -->
+                        <div id="goldPanel" class="hidden space-y-3 bg-amber-50 p-4 rounded-xl border border-amber-200">
+                            <div>
+                                <label for="goldDesign" class="block text-sm font-medium text-gray-700">ประเภท / แบบทอง</label>
+                                <select id="goldDesign" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:ring-amber-500 focus:border-amber-500 transition duration-150">
+                                    <option value="bar">ทองคำแท่ง (96.5%)</option>
+                                    <option value="plain">ทองรูปพรรณ – แบบเรียบ</option>
+                                    <option value="common" selected>ทองรูปพรรณ – ลายทั่วไป</option>
+                                    <option value="special">ทองรูปพรรณ – ลายพิเศษ / งานละเอียด</option>
+                                    <option value="custom">กำหนดค่ากำเหน็จเอง</option>
+                                </select>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label for="goldWeight" class="block text-sm font-medium text-gray-700">น้ำหนักทอง</label>
+                                    <input type="number" id="goldWeight" value="1" min="0" step="any" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:ring-amber-500 focus:border-amber-500 transition duration-150">
+                                </div>
+                                <div>
+                                    <label for="goldWeightUnit" class="block text-sm font-medium text-gray-700">หน่วย</label>
+                                    <select id="goldWeightUnit" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:ring-amber-500 focus:border-amber-500 transition duration-150">
+                                        <option value="baht" selected>บาท</option>
+                                        <option value="salung">สลึง</option>
+                                        <option value="gram">กรัม</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="goldPrice" class="block text-sm font-medium text-gray-700">ราคาทองต่อ 1 บาททอง (บาท)</label>
+                                <input type="number" id="goldPrice" min="0" step="any" placeholder="กรอกราคาทองวันนี้" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:ring-amber-500 focus:border-amber-500 transition duration-150">
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label for="goldFee" class="block text-sm font-medium text-gray-700">ค่ากำเหน็จ (บาท)</label>
+                                    <input type="number" id="goldFee" value="500" min="0" step="any" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:ring-amber-500 focus:border-amber-500 transition duration-150">
+                                </div>
+                                <div>
+                                    <label for="goldFeeUnit" class="block text-sm font-medium text-gray-700">คิดแบบ</label>
+                                    <select id="goldFeeUnit" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:ring-amber-500 focus:border-amber-500 transition duration-150">
+                                        <option value="perBaht" selected>ต่อ 1 บาททอง</option>
+                                        <option value="lump">เหมาทั้งหมด</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-500">ค่ากำเหน็จที่เติมให้ตามแบบเป็นค่าตัวอย่าง แก้ตามที่ร้านคิดได้</p>
+                            <div>
+                                <label for="goldDown" class="block text-sm font-medium text-gray-700">เงินดาวน์ (บาท)</label>
+                                <input type="number" id="goldDown" value="0" min="0" step="any" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:ring-amber-500 focus:border-amber-500 transition duration-150">
+                            </div>
+                            <div id="goldBreakdown" class="text-sm text-gray-700 space-y-1 pt-3 border-t border-amber-200"></div>
+                        </div>
+
+                        <div>
+                            <label for="principal" class="block text-sm font-medium text-gray-700">เงินต้น (บาท)</label>
+                            <input type="number" id="principal" value="10000" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500 transition duration-150" required min="1">
+                            <p id="principalHint" class="text-xs text-gray-500 mt-1 hidden">คำนวณจากราคาทองด้านบนอัตโนมัติ (ราคาทอง + กำเหน็จ − เงินดาวน์)</p>
+                        </div>
                     </div>
 
                     <!-- อัตราดอกเบี้ย -->
@@ -149,9 +215,9 @@
                 <!-- Amortization Table -->
                 <div id="amortizationSection" class="bg-white p-6 rounded-xl shadow-custom hidden">
                     <h2 class="text-2xl font-semibold mb-4 text-gray-700">ตารางการผ่อนชำระ</h2>
-                    <div id="amortizationTableContainer" class="overflow-x-auto max-h-96">
+                    <div id="amortizationTableContainer" class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50 sticky top-0">
+                            <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">งวดที่</th>
                                     <th class="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">เงินต้นคงเหลือ (เริ่มต้น)</th>
@@ -263,6 +329,12 @@
             }
         };
 
+        // Remember values typed in manual mode so they survive switching modes
+        const rememberManualPrincipal = (input) => {
+            const mode = document.querySelector('input[name="principalMode"]:checked').value;
+            if (mode === 'manual') manualPrincipalValues[input.dataset.period] = input.value;
+        };
+
         // Function to update the dynamic principal input fields (Manual/Increasing mode)
         const updatePrincipalInputs = () => {
             const term = parseInt(document.getElementById('term').value, 10) || 0;
@@ -270,14 +342,6 @@
             const principalMode = document.querySelector('input[name="principalMode"]:checked').value;
             const container = document.getElementById('principalInputsContainer');
             
-            // 1. Save current manual values before clearing (for 'manual' mode memory)
-            if (principalMode !== 'manual') {
-                const currentInputs = document.querySelectorAll('.principal-input');
-                currentInputs.forEach(input => {
-                    manualPrincipalValues[input.dataset.period] = input.value;
-                });
-            }
-
             // Clear previous content
             container.innerHTML = '<p class="text-sm text-gray-500 mb-2">ระบุยอดเงินต้นที่ต้องการผ่อนชำระในแต่ละงวด:</p>';
             
@@ -345,7 +409,7 @@
                                min="0"
                                step="0.01"
                                class="principal-input mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2 text-sm focus:ring-purple-500 focus:border-purple-500"
-                               oninput="validatePrincipalSum(); calculateDebtAndRender();">
+                               oninput="rememberManualPrincipal(this); validatePrincipalSum(); calculateDebtAndRender();">
                     `;
                     container.appendChild(inputGroup);
                 }
@@ -516,6 +580,87 @@
              renderResults(results);
         };
 
+        // --- GOLD PRINCIPAL ---
+
+        const GRAMS_PER_BAHT = 15.244; // น้ำหนัก 1 บาททอง (ทอง 96.5%)
+
+        // ค่ากำเหน็จเริ่มต้นตามแบบ (ตัวอย่าง — ปรับตามร้านได้)
+        const GOLD_DESIGNS = {
+            bar:     { fee: 0,   unit: 'perBaht' },
+            plain:   { fee: 300, unit: 'perBaht' },
+            common:  { fee: 500, unit: 'perBaht' },
+            special: { fee: 800, unit: 'perBaht' },
+            custom:  null
+        };
+
+        let directPrincipalValue = '10000'; // remembers the typed principal while in gold mode
+
+        const computeGold = () => {
+            const weight = parseFloat(document.getElementById('goldWeight').value) || 0;
+            const weightUnit = document.getElementById('goldWeightUnit').value;
+            const price = parseFloat(document.getElementById('goldPrice').value) || 0;
+            const fee = parseFloat(document.getElementById('goldFee').value) || 0;
+            const feeUnit = document.getElementById('goldFeeUnit').value;
+            const down = parseFloat(document.getElementById('goldDown').value) || 0;
+
+            let weightBaht = weight;
+            if (weightUnit === 'salung') weightBaht = weight / 4;
+            else if (weightUnit === 'gram') weightBaht = weight / GRAMS_PER_BAHT;
+
+            const goldValue = weightBaht * price;
+            const feeTotal = feeUnit === 'perBaht' ? fee * weightBaht : fee;
+            const total = goldValue + feeTotal;
+            return { weightBaht, goldValue, feeTotal, total, down, principal: total - down };
+        };
+
+        const syncGoldPrincipal = () => {
+            const g = computeGold();
+            const principalEl = document.getElementById('principal');
+            const box = document.getElementById('goldBreakdown');
+            const row = (label, value, cls = '') =>
+                `<div class="flex justify-between ${cls}"><span>${label}</span><span>${value}</span></div>`;
+
+            let html = row('น้ำหนักรวม', `${new Intl.NumberFormat('th-TH', { maximumFractionDigits: 4 }).format(g.weightBaht)} บาททอง`);
+            html += row('ค่าทอง', `${formatBaht(g.goldValue)} บาท`);
+            html += row('ค่ากำเหน็จ', `${formatBaht(g.feeTotal)} บาท`);
+            html += row('รวม', `${formatBaht(g.total)} บาท`, 'font-medium');
+            html += row('หักเงินดาวน์', `− ${formatBaht(g.down)} บาท`);
+            html += row('เงินต้นที่ผ่อน', `${formatBaht(Math.max(0, g.principal))} บาท`, 'font-bold text-amber-800 text-base');
+            if (g.principal <= 0) {
+                html += '<p class="text-red-600 text-xs pt-1">กรอกราคาทองให้ครบ และเงินดาวน์ต้องน้อยกว่ายอดรวม</p>';
+            }
+            box.innerHTML = html;
+
+            principalEl.value = g.principal > 0 ? (Math.round(g.principal * 100) / 100).toFixed(2) : '';
+            principalEl.dispatchEvent(new Event('input', { bubbles: true }));
+        };
+
+        const applyGoldDesignPreset = () => {
+            const preset = GOLD_DESIGNS[document.getElementById('goldDesign').value];
+            if (preset) {
+                document.getElementById('goldFee').value = preset.fee;
+                document.getElementById('goldFeeUnit').value = preset.unit;
+            }
+        };
+
+        const setPrincipalSource = () => {
+            const isGold = document.querySelector('input[name="principalSource"]:checked').value === 'gold';
+            const principalEl = document.getElementById('principal');
+
+            document.getElementById('goldPanel').classList.toggle('hidden', !isGold);
+            document.getElementById('principalHint').classList.toggle('hidden', !isGold);
+            principalEl.readOnly = isGold;
+            principalEl.classList.toggle('bg-gray-100', isGold);
+
+            if (isGold) {
+                directPrincipalValue = principalEl.value; // still the typed value at this moment
+                syncGoldPrincipal();
+            } else {
+                principalEl.value = directPrincipalValue;
+                principalEl.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        };
+
         // --- EVENT HANDLERS ---
 
         document.getElementById('debtForm').addEventListener('submit', function(e) {
@@ -560,6 +705,19 @@
                     calculateDebtAndRender(); 
                 });
             });
+
+            // GOLD LISTENERS
+            document.querySelectorAll('input[name="principalSource"]').forEach(radio => {
+                radio.addEventListener('change', setPrincipalSource);
+            });
+            document.getElementById('goldDesign').addEventListener('input', () => {
+                applyGoldDesignPreset();
+                syncGoldPrincipal();
+            });
+            ['goldWeight', 'goldWeightUnit', 'goldPrice', 'goldFee', 'goldFeeUnit', 'goldDown'].forEach(id => {
+                document.getElementById(id).addEventListener('input', syncGoldPrincipal);
+            });
+            applyGoldDesignPreset();
 
             // Initial setup and calculation
             updatePrincipalInputs(); 
